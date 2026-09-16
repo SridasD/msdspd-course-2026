@@ -14,6 +14,7 @@ import {
 import type { CourseData, SubActivity, ThinkingSkill } from "@/lib/types";
 import { ActivityCard } from "./ActivityCard";
 import { Badge } from "./Badge";
+import { ExportExcelButton } from "./ExportExcelButton";
 
 function subMatches(sub: SubActivity, q: string, tags: ThinkingSkill[]): boolean {
   const tagOk = tags.length === 0 || tags.includes(sub.tag);
@@ -159,6 +160,8 @@ export function ActivityList({ courseData }: { courseData?: CourseData }) {
             >
               Collapse
             </button>
+            <span className="text-slate-300">·</span>
+            <ExportExcelButton courseData={courseData} variant="toolbar" label="Excel (.xlsx)" />
           </div>
         </div>
 

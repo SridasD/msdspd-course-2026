@@ -12,6 +12,8 @@ import { CS102_DATA } from "@/lib/courses/cs102";
 import { COURSES, getCourseStats } from "@/lib/courses";
 import type { CourseData } from "@/lib/types";
 
+import { ExportExcelButton } from "./ExportExcelButton";
+
 function Stat({
   icon: Icon,
   label,
@@ -56,29 +58,31 @@ export function CourseHeader({ courseData }: { courseData?: CourseData }) {
             <span>MSDSPD 2026 Curriculum</span>
           </Link>
 
-          {allCourses.length > 1 && (
-            <div className="flex items-center gap-2">
-              <span className="text-slate-400">Switch course:</span>
-              <div className="flex items-center gap-1">
-                {allCourses.map((c) => {
-                  const isActive = c.slug === data.slug;
-                  return (
-                    <Link
-                      key={c.slug}
-                      href={`/courses/${c.slug}`}
-                      className={`rounded px-2 py-0.5 font-medium transition-colors ${
-                        isActive
-                          ? "bg-indigo-600 text-white"
-                          : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100"
-                      }`}
-                    >
-                      {c.course.code}
-                    </Link>
-                  );
-                })}
+          <div className="flex items-center gap-3">
+            {allCourses.length > 1 && (
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">Switch course:</span>
+                <div className="flex items-center gap-1">
+                  {allCourses.map((c) => {
+                    const isActive = c.slug === data.slug;
+                    return (
+                      <Link
+                        key={c.slug}
+                        href={`/courses/${c.slug}`}
+                        className={`rounded px-2 py-0.5 font-medium transition-colors ${
+                          isActive
+                            ? "bg-indigo-600 text-white"
+                            : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100"
+                        }`}
+                      >
+                        {c.course.code}
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
@@ -90,19 +94,29 @@ export function CourseHeader({ courseData }: { courseData?: CourseData }) {
           <span>{course.semester}</span>
         </div>
 
-        <div className="mt-4 max-w-2xl">
-          <div className="flex items-center gap-3">
-            <span className="rounded-lg bg-indigo-600 px-2.5 py-1 text-sm font-semibold tracking-tight text-white">
-              {course.code}
-            </span>
-            <span className="text-sm text-slate-400 tabular-nums">L–T–P {course.ltp}</span>
+        <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="rounded-lg bg-indigo-600 px-2.5 py-1 text-sm font-semibold tracking-tight text-white">
+                {course.code}
+              </span>
+              <span className="text-sm text-slate-400 tabular-nums">L–T–P {course.ltp}</span>
+            </div>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+              {course.title}
+            </h1>
+            <p className="mt-2 text-sm leading-relaxed text-slate-500">
+              {course.university}. {data.shortDesc ?? "An activity-based curriculum with clear evidence requirements, practical learning resources, and transparent review standards."}
+            </p>
           </div>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            {course.title}
-          </h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-500">
-            {course.university}. {data.shortDesc ?? "An activity-based curriculum with clear evidence requirements, practical learning resources, and transparent review standards."}
-          </p>
+
+          <div className="flex shrink-0 items-center gap-2 sm:mt-1">
+            <ExportExcelButton
+              courseData={data}
+              variant="outline"
+              label={`Export ${course.code} (.xlsx)`}
+            />
+          </div>
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">

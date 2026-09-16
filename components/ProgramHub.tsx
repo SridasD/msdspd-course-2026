@@ -17,6 +17,7 @@ import Link from "next/link";
 import { COURSES, PROGRAM_INFO, SEMESTER_1_CATALOG, getCourseStats } from "@/lib/courses";
 import type { CourseData } from "@/lib/types";
 import { Badge } from "./Badge";
+import { ExportExcelButton } from "./ExportExcelButton";
 
 const PART_DOT_COLORS: Record<string, string> = {
   sky: "bg-sky-500",
@@ -102,13 +103,20 @@ function ActiveCourseCard({ courseData }: { courseData: CourseData }) {
             </div>
           </div>
 
-          <Link
-            href={`/courses/${courseData.slug}`}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-600 sm:w-auto"
-          >
-            <span>Explore Course Curriculum</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:items-center lg:w-auto">
+            <ExportExcelButton
+              courseData={courseData}
+              variant="outline"
+              label="Excel (.xlsx)"
+            />
+            <Link
+              href={`/courses/${courseData.slug}`}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-600 sm:w-auto"
+            >
+              <span>Explore Course</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -209,13 +217,25 @@ export function ProgramHub() {
             <span>Master of Science Curriculum Portal</span>
           </div>
 
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-            {PROGRAM_INFO.name}
-          </h1>
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+                {PROGRAM_INFO.name}
+              </h1>
 
-          <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
-            {PROGRAM_INFO.description}
-          </p>
+              <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
+                {PROGRAM_INFO.description}
+              </p>
+            </div>
+
+            <div className="shrink-0">
+              <ExportExcelButton
+                isMaster
+                variant="primary"
+                label="Download All Courses (.xlsx)"
+              />
+            </div>
+          </div>
 
           {/* Quick Program Metric Cards */}
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
