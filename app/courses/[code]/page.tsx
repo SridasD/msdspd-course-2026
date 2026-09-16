@@ -46,7 +46,11 @@ export default function CoursePage({ params }: PageProps) {
       </main>
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-6xl px-5 py-6 text-xs text-slate-400 sm:px-8">
-          Hours are learning-effort estimates, not attendance requirements.
+          {courseData.course.totalPoints != null
+            ? courseData.course.totalHours > 0
+              ? "Points use the approved scale of 1 credit = 1,000 points. Hours are learning-effort estimates."
+              : "Points are assessment weights. Learning hours remain subject to academic confirmation."
+            : "Hours are learning-effort estimates, not attendance requirements."}
         </div>
       </footer>
     </div>

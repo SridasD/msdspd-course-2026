@@ -28,10 +28,12 @@ function PartHeader({
   color,
   label,
   hours,
+  points,
 }: {
   color: "indigo" | "sky" | "emerald" | "violet" | string;
   label: string;
   hours: number;
+  points?: number;
 }) {
   const dot =
     color === "sky"
@@ -55,7 +57,7 @@ function PartHeader({
       <h2 className="text-sm font-semibold text-slate-800">{label}</h2>
       <div className="h-px flex-1 bg-slate-200" aria-hidden="true" />
       <Badge className={`${chip} tabular-nums`}>
-        {hours} hrs
+        {points != null ? `${points} pts` : `${hours} hrs`}
       </Badge>
     </div>
   );
@@ -193,12 +195,15 @@ export function ActivityList({ courseData }: { courseData?: CourseData }) {
         const partTotalHours = activities
           .filter((a) => a.part === p.id)
           .reduce((n, a) => n + a.hours, 0);
+        const partTotalPoints = courseData?.course.totalPoints != null
+          ? activities.filter((a) => a.part === p.id).reduce((n, a) => n + (a.points ?? 0), 0)
+          : undefined;
 
         if (partMatches.length === 0) return null;
 
         return (
           <div key={p.id} className={idx > 0 ? "mt-10" : ""}>
-            <PartHeader color={p.color} label={p.label} hours={partTotalHours} />
+            <PartHeader color={p.color} label={p.label} hours={partTotalHours} points={partTotalPoints} />
             <div className="mt-4 space-y-3">
               {partMatches.map((c) => (
                 <ActivityCard

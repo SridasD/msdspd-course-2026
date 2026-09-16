@@ -120,7 +120,11 @@ export function CourseHeader({ courseData }: { courseData?: CourseData }) {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat icon={Clock} label="Total hours" value={stats.totalHours} />
+          <Stat
+            icon={Clock}
+            label={course.totalPoints != null ? "Total points" : "Total hours"}
+            value={course.totalPoints ?? stats.totalHours}
+          />
           <Stat icon={Award} label="Credits" value={stats.credits} accent="text-violet-600" />
           <Stat icon={Layers} label="Activities" value={stats.activityCount} accent="text-emerald-600" />
           <Stat icon={BookOpen} label="Sub-activities" value={stats.subActivityCount} accent="text-sky-600" />

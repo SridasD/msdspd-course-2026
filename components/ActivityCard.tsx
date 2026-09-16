@@ -114,7 +114,7 @@ export function ActivityCard({
           <div className="hidden shrink-0 items-center gap-2 sm:flex">
             <Badge className={chip}>{activity.subs.length} sub-activities</Badge>
             <Badge className="bg-slate-900 text-white ring-slate-900 tabular-nums">
-              {activity.hours} hrs
+              {activity.points != null ? `${activity.points} pts` : `${activity.hours} hrs`}
             </Badge>
           </div>
 

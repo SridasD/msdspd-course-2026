@@ -1,4 +1,5 @@
 import type { CourseData, ProgramInfo, ThinkingSkill } from "../types";
+import { CS101_DATA } from "./cs101";
 import { CS102_DATA } from "./cs102";
 import { CS501_DATA } from "./cs501";
 import { CS601_DATA } from "./cs601";
@@ -18,10 +19,62 @@ export const PROGRAM_INFO: ProgramInfo = {
 /**
  * Registry of all active courses in the MSDSPD 2026 curriculum portal.
  */
+/**
+ * Converts an hour-based course to the university point scale while retaining
+ * the original learning-hour estimates. Largest-remainder allocation keeps
+ * every point integral and guarantees that the sub-activity total is exact.
+ */
+function withCreditPoints(courseData: CourseData): CourseData {
+  if (courseData.course.totalPoints != null) return courseData;
+
+  const totalPoints = courseData.course.credits * 1000;
+  const subs = courseData.activities.flatMap((activity) =>
+    activity.subs.map((sub) => ({ activityId: activity.id, sub })),
+  );
+  const totalHours = subs.reduce((sum, item) => sum + item.sub.hours, 0);
+
+  if (totalHours <= 0) {
+    return {
+      ...courseData,
+      course: { ...courseData.course, totalPoints },
+    };
+  }
+
+  const allocations = subs.map((item, index) => {
+    const exact = (item.sub.hours / totalHours) * totalPoints;
+    return { ...item, index, points: Math.floor(exact), remainder: exact % 1 };
+  });
+  let pointsRemaining = totalPoints - allocations.reduce((sum, item) => sum + item.points, 0);
+  for (const item of [...allocations].sort((a, b) => b.remainder - a.remainder || a.index - b.index)) {
+    if (pointsRemaining-- <= 0) break;
+    item.points += 1;
+  }
+
+  const pointsBySubId = new Map(allocations.map((item) => [item.sub.id, item.points]));
+  const activities = courseData.activities.map((activity) => {
+    const activitySubs = activity.subs.map((sub) => ({
+      ...sub,
+      points: pointsBySubId.get(sub.id) ?? 0,
+    }));
+    return {
+      ...activity,
+      points: activitySubs.reduce((sum, sub) => sum + (sub.points ?? 0), 0),
+      subs: activitySubs,
+    };
+  });
+
+  return {
+    ...courseData,
+    course: { ...courseData.course, totalPoints },
+    activities,
+  };
+}
+
 export const COURSES: Record<string, CourseData> = {
-  cs102: CS102_DATA,
-  cs501: CS501_DATA,
-  cs601: CS601_DATA,
+  cs101: CS101_DATA,
+  cs102: withCreditPoints(CS102_DATA),
+  cs501: withCreditPoints(CS501_DATA),
+  cs601: withCreditPoints(CS601_DATA),
 };
 
 export interface SemesterCoursePreview {
@@ -48,7 +101,8 @@ export const SEMESTER_1_CATALOG: {
       ltp: "3–0–1",
       description:
         "Deep learning foundations, Transformer architectures, neural networks, and scalable production ML deployment.",
-      status: "preview",
+      status: "active",
+      slug: "cs101",
     },
     {
       code: "CS102",
@@ -129,6 +183,7 @@ export interface ComputedCourseStats {
   activityCount: number;
   subActivityCount: number;
   partHours: Record<string, number>;
+  partPoints: Record<string, number>;
 }
 
 export function getCourseStats(courseData: CourseData): ComputedCourseStats {
@@ -136,8 +191,10 @@ export function getCourseStats(courseData: CourseData): ComputedCourseStats {
   const subActivityCount = courseData.activities.reduce((sum, a) => sum + a.subs.length, 0);
 
   const partHours: Record<string, number> = {};
+  const partPoints: Record<string, number> = {};
   for (const act of courseData.activities) {
     partHours[act.part] = (partHours[act.part] ?? 0) + act.hours;
+    partPoints[act.part] = (partPoints[act.part] ?? 0) + (act.points ?? 0);
   }
 
   return {
@@ -146,5 +203,6 @@ export function getCourseStats(courseData: CourseData): ComputedCourseStats {
     activityCount,
     subActivityCount,
     partHours,
+    partPoints,
   };
 }

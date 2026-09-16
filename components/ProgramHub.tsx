@@ -80,7 +80,11 @@ function ActiveCourseCard({ courseData }: { courseData: CourseData }) {
                   className={`h-2 w-2 rounded-full ${PART_DOT_COLORS[part.color] ?? "bg-indigo-500"}`}
                 />
                 <span className="font-semibold">{part.label}</span>
-                <span className="text-slate-400">({stats.partHours[part.id] ?? 0} hrs)</span>
+                <span className="text-slate-400">
+                  ({courseData.course.totalPoints != null
+                    ? `${stats.partPoints[part.id] ?? 0} pts`
+                    : `${stats.partHours[part.id] ?? 0} hrs`})
+                </span>
               </span>
             ))}
           </div>
@@ -185,6 +189,7 @@ function PreviewCourseCard({
 }
 
 export function ProgramHub() {
+  const cs101 = COURSES.cs101;
   const cs102 = COURSES.cs102;
   const cs501 = COURSES.cs501;
   const cs601 = COURSES.cs601;
@@ -262,8 +267,8 @@ export function ProgramHub() {
                 <Layers className="h-4 w-4 text-sky-600" />
                 <span>Interactive Portals</span>
               </div>
-              <div className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">3 Courses</div>
-              <div className="mt-0.5 text-xs text-slate-400">CS102, CS501, CS601 Active</div>
+              <div className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">4 Courses</div>
+              <div className="mt-0.5 text-xs text-slate-400">CS101, CS102, CS501, CS601 Active</div>
             </div>
 
             <div className="rounded-xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur">
@@ -294,15 +299,7 @@ export function ProgramHub() {
             {/* CS102 Active */}
             {cs102 && <ActiveCourseCard courseData={cs102} />}
 
-            {/* CS101 Preview */}
-            <PreviewCourseCard
-              code="CS101"
-              title="Advanced AI & Machine Learning"
-              category="core"
-              credits={4}
-              ltp="3–0–1"
-              description="Deep learning foundations, Transformer neural architectures, reinforcement learning systems, and production ML model deployment pipelines."
-            />
+            {cs101 && <ActiveCourseCard courseData={cs101} />}
           </div>
         </section>
 

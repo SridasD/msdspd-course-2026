@@ -182,7 +182,7 @@ export function SubActivityDetail({
 
         <div className="flex shrink-0 items-center gap-2 pl-9 sm:pl-0">
           <Badge className="gap-1 bg-indigo-50 text-indigo-700 ring-indigo-200 tabular-nums">
-            <Clock3 className="h-3 w-3" /> {sub.hours} {sub.hours === 1 ? "hour" : "hours"}
+            <Clock3 className="h-3 w-3" /> {sub.points != null ? `${sub.points} points` : `${sub.hours} ${sub.hours === 1 ? "hour" : "hours"}`}
           </Badge>
           <Badge className="gap-1 bg-slate-50 text-slate-600 ring-slate-200 tabular-nums">
             <BookOpen className="h-3 w-3" /> {resourceIds.length} {resourceIds.length === 1 ? "resource" : "resources"}
@@ -228,7 +228,7 @@ export function SubActivityDetail({
               <dt className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-[10px] text-indigo-700">3</span> Demonstrate the skill</dt>
               <dd className="mt-2 text-sm font-semibold text-slate-800">{sub.tag}</dd>
               <dd className="mt-1.5 text-xs leading-5 text-slate-500">{SKILL_GUIDANCE[sub.tag]}</dd>
-              <dd className="mt-1 flex items-center gap-1 text-xs text-slate-500"><Clock3 className="h-3 w-3" /> {sub.hours} hours estimated</dd>
+              <dd className="mt-1 flex items-center gap-1 text-xs text-slate-500"><Clock3 className="h-3 w-3" /> {sub.points != null ? `${sub.points} assessment points` : `${sub.hours} hours estimated`}</dd>
             </div>
           </dl>
         </section>

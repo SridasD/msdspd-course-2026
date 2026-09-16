@@ -112,7 +112,7 @@ export async function buildCourseWorkbook(courseData: CourseData): Promise<Excel
     ["Course Category", course.type === "elective" ? "Chosen Elective" : "Core Subject"],
     ["L-T-P Structure", course.ltp],
     ["Total Academic Credits", course.credits],
-    ["Total Learning Effort Hours", `${course.totalHours} Hours`],
+    [course.totalPoints != null ? "Total Assessment Points" : "Total Learning Effort Hours", course.totalPoints != null ? `${course.totalPoints} Points` : `${course.totalHours} Hours`],
     ["Total Modules / Activities", stats.activityCount],
     ["Total Micro-Tasks / Sub-Activities", stats.subActivityCount],
     ["Course Philosophy & Scope", courseData.shortDesc || "Hands-on, evidence-based mastery curriculum."],
@@ -136,7 +136,7 @@ export async function buildCourseWorkbook(courseData: CourseData): Promise<Excel
 
   // Parts breakdown section
   overviewSheet.addRow([]);
-  const partHeaderRow = overviewSheet.addRow(["Curriculum Structure & Part Allocation", "Hours"]);
+  const partHeaderRow = overviewSheet.addRow(["Curriculum Structure & Part Allocation", course.totalPoints != null ? "Points" : "Hours"]);
   partHeaderRow.height = 26;
   partHeaderRow.getCell(1).font = { name: "Segoe UI", size: 11, bold: true, color: { argb: "FFFFFF" } };
   partHeaderRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: BRAND.headerBg } };
@@ -146,8 +146,8 @@ export async function buildCourseWorkbook(courseData: CourseData): Promise<Excel
   partHeaderRow.getCell(2).alignment = { vertical: "middle", horizontal: "center" };
 
   for (const part of parts) {
-    const hours = stats.partHours[part.id] ?? 0;
-    const pr = overviewSheet.addRow([`${part.id} — ${part.label}`, `${hours} Hours`]);
+    const weight = course.totalPoints != null ? stats.partPoints[part.id] ?? 0 : stats.partHours[part.id] ?? 0;
+    const pr = overviewSheet.addRow([`${part.id} — ${part.label}`, `${weight} ${course.totalPoints != null ? "Points" : "Hours"}`]);
     pr.height = 22;
     pr.getCell(1).font = { name: "Segoe UI", size: 10, color: { argb: "1E293B" } };
     pr.getCell(1).border = BORDER_THIN;
@@ -168,11 +168,11 @@ export async function buildCourseWorkbook(courseData: CourseData): Promise<Excel
     { header: "Part", key: "part", width: 14 },
     { header: "Activity ID", key: "actId", width: 16 },
     { header: "Activity Title", key: "actTitle", width: 28 },
-    { header: "Act. Hrs", key: "actHours", width: 10 },
+    { header: course.totalPoints != null ? "Act. Pts" : "Act. Hrs", key: "actHours", width: 10 },
     { header: "Sub ID", key: "subId", width: 10 },
     { header: "Sub-Activity Title", key: "subTitle", width: 34 },
     { header: "Thinking Skill Tag", key: "tag", width: 22 },
-    { header: "Sub Hrs", key: "subHours", width: 10 },
+    { header: course.totalPoints != null ? "Sub Pts" : "Sub Hrs", key: "subHours", width: 10 },
     { header: "Evidence Required (Submission)", key: "evidence", width: 44 },
     { header: "Evaluation Standard (Threshold)", key: "standard", width: 44 },
     { header: "Learning Resources", key: "resources", width: 36 },
@@ -192,11 +192,11 @@ export async function buildCourseWorkbook(courseData: CourseData): Promise<Excel
         part: partLabel,
         actId: act.id,
         actTitle: act.title,
-        actHours: act.hours,
+        actHours: act.points ?? act.hours,
         subId: sub.id,
         subTitle: sub.title,
         tag: sub.tag,
-        subHours: sub.hours,
+        subHours: sub.points ?? sub.hours,
         evidence: sub.evidence,
         standard: sub.standard,
         resources: formatResources(sub.resources, resources),
@@ -390,7 +390,7 @@ export async function buildMasterCurriculumWorkbook(coursesList: CourseData[] = 
     { header: "Sub ID", key: "subId", width: 10 },
     { header: "Sub-Activity Title", key: "subTitle", width: 34 },
     { header: "Thinking Skill Tag", key: "tag", width: 22 },
-    { header: "Hours", key: "subHours", width: 10 },
+    { header: "Hours / Points", key: "subHours", width: 12 },
     { header: "Evidence Required", key: "evidence", width: 44 },
     { header: "Evaluation Standard", key: "standard", width: 44 },
   ];
@@ -411,7 +411,7 @@ export async function buildMasterCurriculumWorkbook(coursesList: CourseData[] = 
           subId: sub.id,
           subTitle: sub.title,
           tag: sub.tag,
-          subHours: sub.hours,
+          subHours: sub.points ?? sub.hours,
           evidence: sub.evidence,
           standard: sub.standard,
         });

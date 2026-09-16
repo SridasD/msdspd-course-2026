@@ -30,6 +30,8 @@ export interface SubActivity {
   id: string;
   title: string;
   hours: number;
+  /** assessment points when the source curriculum is point-based */
+  points?: number;
   tag: ThinkingSkill;
   /** what the student submits */
   evidence: string;
@@ -45,6 +47,8 @@ export interface Activity {
   part: string;
   icon: ActivityIcon;
   hours: number;
+  /** assessment points when the source curriculum is point-based */
+  points?: number;
   title: string;
   desc: string;
   outcome: string;
@@ -60,6 +64,8 @@ export interface Course {
   ltp: string;
   credits: number;
   totalHours: number;
+  /** total assessment points when defined by the source curriculum */
+  totalPoints?: number;
   type?: "core" | "elective";
 }
 
@@ -90,4 +96,3 @@ export interface ProgramInfo {
   tagline: string;
   description: string;
 }
-
