@@ -252,12 +252,14 @@ export function CoordinationClient({ courses, activityCount }: CoordinationClien
           </div>
 
           {/* Quick Member Selection Pills */}
-          <div className="mt-5">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-              Quick select team member:
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {TEAM_ROSTER.map((member) => {
+          <div className="mt-5 space-y-3">
+            {/* Academic & Programme Heads */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-purple-700 mr-1">
+                <GraduationCap className="h-3.5 w-3.5 text-purple-600" />
+                <span>Programme Heads:</span>
+              </span>
+              {TEAM_ROSTER.filter((m) => m.isHead).map((member) => {
                 const isSelected =
                   (matchedPerson && matchedPerson.name === member.name) ||
                   searchQuery.toLowerCase() === member.name.toLowerCase();
@@ -265,6 +267,46 @@ export function CoordinationClient({ courses, activityCount }: CoordinationClien
                 return (
                   <button
                     key={member.id}
+                    type="button"
+                    onClick={() => handleSelectPerson(member.name)}
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition shadow-2xs ${
+                      isSelected
+                        ? "bg-purple-700 text-white ring-2 ring-purple-400 shadow-xs"
+                        : "bg-purple-50 text-purple-900 border border-purple-200/90 hover:bg-purple-100 hover:border-purple-300 ring-1 ring-purple-200/60"
+                    }`}
+                  >
+                    <GraduationCap
+                      className={`h-3.5 w-3.5 ${isSelected ? "text-white" : "text-purple-600"}`}
+                    />
+                    <span>{member.name}</span>
+                    <span
+                      className={`text-[10px] font-semibold px-1.5 py-0.2 rounded ${
+                        isSelected
+                          ? "bg-purple-800 text-purple-100"
+                          : "bg-purple-200/70 text-purple-800"
+                      }`}
+                    >
+                      Head
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* CDIPD Team Members (A–Z) */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-1">
+                Mentors &amp; Coordinators (A–Z):
+              </span>
+              {TEAM_ROSTER.filter((m) => !m.isHead).map((member) => {
+                const isSelected =
+                  (matchedPerson && matchedPerson.name === member.name) ||
+                  searchQuery.toLowerCase() === member.name.toLowerCase();
+
+                return (
+                  <button
+                    key={member.id}
+                    type="button"
                     onClick={() => handleSelectPerson(member.name)}
                     className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
                       isSelected
@@ -851,6 +893,9 @@ function ClickableStatusPill({
 }) {
   const gap = value.includes("GAP") || value.includes("Requires confirmation");
   const cleanName = value.split(" — ")[0].trim();
+  const isHead =
+    cleanName.toLowerCase().includes("ajith kumar") ||
+    cleanName.toLowerCase().includes("manoj kumar");
 
   return (
     <button
@@ -861,17 +906,27 @@ function ClickableStatusPill({
       disabled={gap}
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset transition ${
         isActive
-          ? "bg-indigo-600 text-white ring-indigo-600 shadow-xs"
+          ? isHead
+            ? "bg-purple-700 text-white ring-purple-700 shadow-xs"
+            : "bg-indigo-600 text-white ring-indigo-600 shadow-xs"
           : gap
           ? "bg-amber-50 text-amber-800 ring-amber-200 cursor-default"
+          : isHead
+          ? "bg-purple-50 text-purple-900 ring-purple-300 hover:bg-purple-100 hover:text-purple-950 hover:ring-purple-400 cursor-pointer"
           : "bg-emerald-50 text-emerald-700 ring-emerald-200 hover:bg-indigo-50 hover:text-indigo-700 hover:ring-indigo-300 cursor-pointer"
       }`}
       title={gap ? value : `Click to filter levels for ${cleanName}`}
     >
       {gap ? (
         <AlertTriangle className="h-3 w-3" />
+      ) : isHead ? (
+        <GraduationCap
+          className={`h-3.5 w-3.5 ${isActive ? "text-white" : "text-purple-600"}`}
+        />
       ) : (
-        <CheckCircle2 className={`h-3 w-3 ${isActive ? "text-white" : "text-emerald-600"}`} />
+        <CheckCircle2
+          className={`h-3 w-3 ${isActive ? "text-white" : "text-emerald-600"}`}
+        />
       )}
       <span>{value}</span>
     </button>
