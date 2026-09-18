@@ -13,6 +13,9 @@ import { COURSES, getCourseStats } from "@/lib/courses";
 import type { CourseData } from "@/lib/types";
 
 import { ExportExcelButton } from "./ExportExcelButton";
+import { PageHero } from "./PageHero";
+import { GradientHeading } from "./GradientHeading";
+import { BrandLogos } from "./BrandLogos";
 
 function Stat({
   icon: Icon,
@@ -49,27 +52,44 @@ export function CourseHeader({ courseData }: { courseData?: CourseData }) {
     <header className="border-b border-slate-200 bg-white">
       {/* Top navigation banner */}
       <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-2.5 sm:px-8">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 text-xs">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 font-semibold text-slate-600 transition-colors hover:text-indigo-600"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 text-slate-400" />
-            <span>MSDSPD 2026 Curriculum</span>
-          </Link>
-
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-y-2 gap-x-4 text-xs">
           <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1 rounded font-medium text-slate-500 transition-colors hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                <ArrowLeft className="h-3.5 w-3.5 text-slate-400" />
+                <span>MSDSPD</span>
+              </Link>
+              <span className="text-slate-300">/</span>
+              <Link
+                href="/semesters/1"
+                className="rounded font-medium text-slate-600 transition-colors hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                Semester 1
+              </Link>
+              <span className="text-slate-300">/</span>
+              <span className="font-bold text-slate-900">{course.code}</span>
+            </div>
+            <span className="h-3.5 w-px bg-slate-200 hidden md:inline" aria-hidden="true" />
+            <div className="hidden md:block">
+              <BrandLogos size="sm" muted />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
             {allCourses.length > 1 && (
-              <div className="flex items-center gap-2">
-                <span className="text-slate-400">Switch course:</span>
-                <div className="flex items-center gap-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-slate-500">Switch course:</span>
+                <div className="flex flex-wrap items-center gap-1">
                   {allCourses.map((c) => {
                     const isActive = c.slug === data.slug;
                     return (
                       <Link
                         key={c.slug}
                         href={`/courses/${c.slug}`}
-                        className={`rounded px-2 py-0.5 font-medium transition-colors ${
+                        className={`rounded px-2 py-0.5 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                           isActive
                             ? "bg-indigo-600 text-white"
                             : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100"
@@ -86,39 +106,43 @@ export function CourseHeader({ courseData }: { courseData?: CourseData }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          <GraduationCap className="h-4 w-4 text-indigo-600" aria-hidden="true" />
-          <span className="font-medium text-slate-700">{course.department}</span>
-          <span className="text-slate-300">/</span>
-          <span>{course.semester}</span>
-        </div>
-
-        <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="max-w-2xl">
+      <PageHero
+        as="div"
+        intensity="minimal"
+        badge={
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <GraduationCap className="h-4 w-4 text-indigo-600" aria-hidden="true" />
+            <span className="font-medium text-slate-700">{course.department}</span>
+            <span className="text-slate-300">/</span>
+            <span>{course.semester}</span>
+          </div>
+        }
+        title={
+          <>
             <div className="flex items-center gap-3">
               <span className="rounded-lg bg-indigo-600 px-2.5 py-1 text-sm font-semibold tracking-tight text-white">
                 {course.code}
               </span>
-              <span className="text-sm text-slate-400 tabular-nums">L–T–P {course.ltp}</span>
+              <span className="text-sm text-slate-500 tabular-nums">L–T–P {course.ltp}</span>
             </div>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            <GradientHeading className="mt-3 text-3xl font-semibold text-slate-900 sm:text-4xl">
               {course.title}
-            </h1>
-            <p className="mt-2 text-sm leading-relaxed text-slate-500">
-              {course.university}. {data.shortDesc ?? "An activity-based curriculum with clear evidence requirements, practical learning resources, and transparent review standards."}
-            </p>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2 sm:mt-1">
-            <ExportExcelButton
-              courseData={data}
-              variant="outline"
-              label={`Export ${course.code} (.xlsx)`}
-            />
-          </div>
-        </div>
-
+            </GradientHeading>
+          </>
+        }
+        subhead={
+          <p className="text-sm leading-relaxed text-slate-500">
+            {course.university}. {data.shortDesc ?? "An activity-based curriculum with clear evidence requirements, practical learning resources, and transparent review standards."}
+          </p>
+        }
+        actions={
+          <ExportExcelButton
+            courseData={data}
+            variant="outline"
+            label={`Export ${course.code} (.xlsx)`}
+          />
+        }
+      >
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Stat
             icon={Clock}
@@ -129,7 +153,7 @@ export function CourseHeader({ courseData }: { courseData?: CourseData }) {
           <Stat icon={Layers} label="Activities" value={stats.activityCount} accent="text-emerald-600" />
           <Stat icon={BookOpen} label="Sub-activities" value={stats.subActivityCount} accent="text-sky-600" />
         </div>
-      </div>
+      </PageHero>
     </header>
   );
 }

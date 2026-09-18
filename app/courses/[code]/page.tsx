@@ -41,11 +41,11 @@ export default function CoursePage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <CourseHeader courseData={courseData} />
-      <main>
+      <main id="main-content">
         <ActivityList courseData={courseData} />
       </main>
       <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-5 py-6 text-xs text-slate-400 sm:px-8">
+        <div className="mx-auto max-w-6xl px-5 py-6 text-xs text-slate-500 sm:px-8">
           {courseData.course.totalPoints != null
             ? courseData.course.totalHours > 0
               ? "Points use the approved scale of 1 credit = 1,000 points. Hours are learning-effort estimates."

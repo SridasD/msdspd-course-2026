@@ -100,10 +100,10 @@ export function ActivityCard({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold tabular-nums text-slate-400">
+              <span className="text-xs font-semibold tabular-nums text-slate-500">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="text-xs font-medium text-slate-400">{activity.id}</span>
+              <span className="text-xs font-medium text-slate-500">{activity.id}</span>
             </div>
             <div className="mt-0.5 truncate text-base font-semibold text-slate-900">
               {activity.title}
@@ -136,7 +136,7 @@ export function ActivityCard({
         className="grid transition-all duration-300 ease-out"
         style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
       >
-        <div className="overflow-hidden">
+        <div className="overflow-hidden" inert={!open}>
           <div className="border-t border-slate-100 bg-slate-50 px-5 py-5 sm:px-6">
             <div className="mb-4 flex items-start gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
               <Award className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />

@@ -131,14 +131,14 @@ export function ActivityList({ courseData }: { courseData?: CourseData }) {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search activities, evidence, standards…"
               aria-label="Search the curriculum"
-              className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+              className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-9 text-sm text-slate-800 placeholder:text-slate-500 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Clear search"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -146,7 +146,7 @@ export function ActivityList({ courseData }: { courseData?: CourseData }) {
           </div>
 
           <div className="flex items-center gap-2 text-sm">
-            <span className="tabular-nums text-slate-400">
+            <span className="tabular-nums text-slate-500">
               {filtering ? `${totalHits} matches` : `${activities.length} activities`}
             </span>
             <span className="text-slate-300">·</span>

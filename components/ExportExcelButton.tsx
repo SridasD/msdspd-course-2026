@@ -59,7 +59,7 @@ export function ExportExcelButton({
         onClick={handleExport}
         disabled={loading}
         title="Download activities, sub-activities, and evaluation rubrics as formatted Excel sheet"
-        className={`inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:border-indigo-300 hover:bg-slate-50 hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-60 ${className}`}
+        className={`inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:border-indigo-300 hover:bg-slate-50 hover:text-indigo-600 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-60 ${className}`}
       >
         {loading ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin text-indigo-600" />

@@ -103,7 +103,7 @@ function ResourceCard({
           <ShieldCheck className="h-4 w-4 text-slate-400" />
         )}
       </div>
-      <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+      <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
         {isMooc ? "Recommended MOOC" : resource.url ? `Learning resource ${index + 1}` : "Course-approved resource"}
       </p>
       <p className="mt-1 text-sm font-semibold leading-snug text-slate-800">{resource.label}</p>
@@ -157,39 +157,41 @@ export function SubActivityDetail({
     <article className="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md lg:col-span-2">
       <span className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-indigo-500 to-cyan-500" aria-hidden="true" />
 
-      <button
-        id={buttonId}
-        type="button"
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={() => setOpen((value) => !value)}
-        className={`flex w-full flex-col gap-3 px-5 py-4 text-left transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 sm:flex-row sm:items-start sm:justify-between sm:px-6 ${open ? "border-b border-slate-200" : ""}`}
-      >
-        <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-200">
-            <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden="true" />
-          </span>
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="rounded bg-slate-900 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-white">
-                {sub.id.startsWith("CS") ? sub.id : `SUB-${sub.id}`}
-              </span>
-              <Badge className={tagClass}>{sub.tag}</Badge>
+      <h4>
+        <button
+          id={buttonId}
+          type="button"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => setOpen((value) => !value)}
+          className={`flex w-full flex-col gap-3 px-5 py-4 text-left transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-500 sm:flex-row sm:items-start sm:justify-between sm:px-6 ${open ? "border-b border-slate-200" : ""}`}
+        >
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-200">
+              <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="rounded bg-slate-900 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-white">
+                  {sub.id.startsWith("CS") ? sub.id : `SUB-${sub.id}`}
+                </span>
+                <Badge className={tagClass}>{sub.tag}</Badge>
+              </div>
+              <span className="mt-2 block text-base font-bold leading-snug text-slate-950">{sub.title}</span>
             </div>
-            <h4 className="mt-2 text-base font-bold leading-snug text-slate-950">{sub.title}</h4>
           </div>
-        </div>
 
-        <div className="flex shrink-0 items-center gap-2 pl-9 sm:pl-0">
-          <Badge className="gap-1 bg-indigo-50 text-indigo-700 ring-indigo-200 tabular-nums">
-            <Clock3 className="h-3 w-3" /> {sub.points != null ? `${sub.points} points` : `${sub.hours} ${sub.hours === 1 ? "hour" : "hours"}`}
-          </Badge>
-          <Badge className="gap-1 bg-slate-50 text-slate-600 ring-slate-200 tabular-nums">
-            <BookOpen className="h-3 w-3" /> {resourceIds.length} {resourceIds.length === 1 ? "resource" : "resources"}
-          </Badge>
-          <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} aria-hidden="true" />
-        </div>
-      </button>
+          <div className="flex shrink-0 items-center gap-2 pl-9 sm:pl-0">
+            <Badge className="gap-1 bg-indigo-50 text-indigo-700 ring-indigo-200 tabular-nums">
+              <Clock3 className="h-3 w-3" /> {sub.points != null ? `${sub.points} points` : `${sub.hours} ${sub.hours === 1 ? "hour" : "hours"}`}
+            </Badge>
+            <Badge className="gap-1 bg-slate-50 text-slate-600 ring-slate-200 tabular-nums">
+              <BookOpen className="h-3 w-3" /> {resourceIds.length} {resourceIds.length === 1 ? "resource" : "resources"}
+            </Badge>
+            <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`} aria-hidden="true" />
+          </div>
+        </button>
+      </h4>
 
       <div
         id={panelId}
@@ -199,7 +201,7 @@ export function SubActivityDetail({
         className="grid transition-all duration-300 ease-out"
         style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
       >
-      <div className="overflow-hidden">
+      <div className="overflow-hidden" inert={!open}>
       <div className="px-5 py-5 sm:px-6">
         <section className="rounded-2xl border border-indigo-200 bg-indigo-50/40 p-4 shadow-sm sm:p-5" aria-labelledby={`${sub.id}-brief`}>
           <div className="flex items-center gap-2">
@@ -215,17 +217,17 @@ export function SubActivityDetail({
 
           <dl className="mt-4 grid overflow-hidden rounded-xl border border-indigo-100 bg-white sm:grid-cols-[1fr_1.5fr_0.8fr]">
             <div className="p-4 sm:border-r sm:border-slate-200">
-              <dt className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-[10px] text-indigo-700">1</span> Understand the task</dt>
+              <dt className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-[10px] text-indigo-700">1</span> Understand the task</dt>
               <dd className="mt-2 text-sm font-semibold leading-5 text-slate-800">{sub.title}</dd>
               <dd className="mt-1.5 text-xs leading-5 text-slate-500">Identify the required outcome and use the learning resources to clarify unfamiliar concepts before you begin.</dd>
             </div>
             <div className="border-t border-slate-200 p-4 sm:border-r sm:border-t-0">
-              <dt className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-[10px] text-indigo-700">2</span> Build &amp; document</dt>
+              <dt className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-[10px] text-indigo-700">2</span> Build &amp; document</dt>
               <dd className="mt-2 text-sm font-semibold leading-5 text-slate-800">{sub.evidence}</dd>
               <dd className="mt-1.5 text-xs leading-5 text-slate-500">Capture the process as well as the final result. Include enough context, labels, or notes for another person to understand your work.</dd>
             </div>
             <div className="border-t border-slate-200 p-4 sm:border-t-0">
-              <dt className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-[10px] text-indigo-700">3</span> Demonstrate the skill</dt>
+              <dt className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-[10px] text-indigo-700">3</span> Demonstrate the skill</dt>
               <dd className="mt-2 text-sm font-semibold text-slate-800">{sub.tag}</dd>
               <dd className="mt-1.5 text-xs leading-5 text-slate-500">{SKILL_GUIDANCE[sub.tag]}</dd>
               <dd className="mt-1 flex items-center gap-1 text-xs text-slate-500"><Clock3 className="h-3 w-3" /> {sub.points != null ? `${sub.points} assessment points` : `${sub.hours} hours estimated`}</dd>
@@ -242,7 +244,7 @@ export function SubActivityDetail({
                 <h5 id={`${sub.id}-resources`} className="text-sm font-bold text-violet-950">Learning resources &amp; MOOCs <span className="font-normal text-violet-400">({resourceIds.length})</span></h5>
               </div>
             </div>
-            <p className="hidden text-xs text-slate-400 sm:block">Use these to prepare your evidence</p>
+            <p className="hidden text-xs text-slate-500 sm:block">Use these to prepare your evidence</p>
           </div>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {resourceIds.map((id, index) => (
@@ -288,7 +290,7 @@ export function SubActivityDetail({
             {/* 2. Formal Academic Threshold & Observable Criteria */}
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                   Official Syllabus Standard
                 </span>
                 <span className="text-xs font-medium text-slate-500">Grading Baseline</span>
